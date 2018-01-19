@@ -4,6 +4,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
+
+import org.thinway.lectorrss.model.News;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,10 +19,37 @@ import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
+
+    public Button mDownloadRss;
+    public ListView mListNews;
+
+    private String mFileContent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mDownloadRss = findViewById(R.id.downloadRss);
+        mListNews = findViewById(R.id.listViewNews);
+
+        mDownloadRss.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ParseNews parseNews = new ParseNews(mFileContent);
+                parseNews.process();
+
+                ArrayAdapter<News> arrayAdapterNews = new ArrayAdapter<News>(
+                        MainActivity.this,
+                        R.layout.news_list_item,
+                        R.id.textViewNoticia,
+                        parseNews.getNews()
+                );
+
+                mListNews.setAdapter(arrayAdapterNews);
+            }
+        });
 
         DownloadData downloadData = new DownloadData();
         downloadData.execute("http://ep00.epimg.net/rss/tags/ultimas_noticias.xml");
@@ -41,13 +74,13 @@ public class MainActivity extends AppCompatActivity {
          */
         @Override
         protected String doInBackground(String... strings) {
-            String result = downloadXmlFile(strings[0]);
+            mFileContent = downloadXmlFile(strings[0]);
 
-            if( result == null ){
+            if( mFileContent == null ){
                 Log.d(TAG, "Problema descargando el XML");
             }
 
-            return result;
+            return mFileContent;
         }
 
         /**
@@ -89,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
             }catch (IOException e){
                 Log.d(TAG, "Error: No se pudo descargar el RSS - " + e.getMessage());
             }
+
             return null;
         }
 
@@ -107,7 +141,6 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             //Log.d(TAG, "Resultado: " + result);
-            System.out.print(result);
         }
     }
 }

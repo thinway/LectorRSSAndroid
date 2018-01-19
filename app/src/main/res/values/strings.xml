@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">LectorRSS</string>
+    <string name="downloadRss">Descargar RSS</string>
 </resources>
