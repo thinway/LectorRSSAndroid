@@ -48,6 +48,8 @@ public class ParseNews {
 
                 switch ( eventType ) {
                     case XmlPullParser.START_TAG:
+                        // Si entro aquí quiere decir que entramos en un nuevo item
+                        // es decir, una nueva noticia
                         if(tagName.equalsIgnoreCase("item")){
                             inEntry = true;
                             currentRecord = new News();
@@ -63,6 +65,8 @@ public class ParseNews {
                                 inEntry = false;
                             } else if ( tagName.equalsIgnoreCase("title")){
                                 currentRecord.setTitle(textValue);
+                            } else if ( tagName.equalsIgnoreCase("description")){
+                                currentRecord.setDescription(textValue);
                             }
                         }
                         break;

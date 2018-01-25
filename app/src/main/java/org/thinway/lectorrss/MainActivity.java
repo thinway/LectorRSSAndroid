@@ -5,11 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-
-import org.thinway.lectorrss.model.News;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,14 +37,19 @@ public class MainActivity extends AppCompatActivity {
                 ParseNews parseNews = new ParseNews(mFileContent);
                 parseNews.process();
 
-                ArrayAdapter<News> arrayAdapterNews = new ArrayAdapter<News>(
+//                ArrayAdapter<News> arrayAdapterNews = new ArrayAdapter<News>(
+//                        MainActivity.this,
+//                        R.layout.news_list_item,
+//                        R.id.textViewTitle,
+//                        parseNews.getNews()
+//                );
+
+                AdapterItem adapterNews = new AdapterItem(
                         MainActivity.this,
-                        R.layout.news_list_item,
-                        R.id.textViewNoticia,
                         parseNews.getNews()
                 );
 
-                mListNews.setAdapter(arrayAdapterNews);
+                mListNews.setAdapter(adapterNews);
             }
         });
 
